@@ -8,18 +8,18 @@ class Matrix {
 
 public:
     Matrix() {}
-    Matrix(int r, int c) : rows(r), cols(c) {}
+    Matrix(int r, int c);
     Matrix(const Matrix& M);
 
     // Properties
-    int Rows() { return rows; }
-    int Columns() { return cols; }
-    bool isSquare() { return rows == cols; }
-    bool isSymmetric();
+    int Rows() const { return rows; }
+    int Columns() const { return cols; }
+    bool isSquare() const { return rows == cols; }
+    bool isSymmetric() const;
 
     // Access
-    std::vector<double>& operator[](int index) { return matrix[index]; }
-    const std::vector<double>& operator[](int index) const { return matrix[index]; }
+    std::vector<double>& operator[](int index) { return data[index]; }
+    const std::vector<double>& operator[](int index) const { return data[index]; }
 
     // Operations
     Matrix operator+(const Matrix& M) const { return Add(M); }
@@ -62,9 +62,12 @@ public:
     // Debug
     std::string ToString() const;
 
+    // Static
+    static Matrix Identity(int size);
+
 protected:
     int rows;
     int cols;
     
-    std::vector<std::vector<double>> matrix;
+    std::vector<std::vector<double>> data;
 };

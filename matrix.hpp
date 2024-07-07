@@ -42,19 +42,22 @@ public:
     double Determinant() const;
     double Trace() const;
 
-    // Elementwise Operations
-    Matrix ElementwiseAdd(const Matrix& M) const;
-    Matrix ElementwiseSub(const Matrix& M) const;
-    Matrix ElementwiseMul(const Matrix& M) const;
-    Matrix ElementwiseDiv(const Matrix& M) const;
+    Matrix ComponentwiseAdd(const Matrix& M) const;
+    Matrix ComponentwiseSub(const Matrix& M) const;
+    Matrix ComponentwiseMul(const Matrix& M) const;
+    Matrix ComponentwiseDiv(const Matrix& M) const;
+
+    Matrix KroneckerMul(const Matrix& M) const;
 
     // Comparisons
     bool operator==(const Matrix& M) const;
     bool operator!=(const Matrix& M) const;
 
     // Manipulations
-    Matrix reshape(int newRows, int newCols) const;
-    Matrix flatten() const { return reshape(1, rows * cols); }
+    Matrix HorizonalConcat(const Matrix& M) const;
+    Matrix VerticalConcat(const Matrix& M) const;
+    Matrix Reshape(int newRows, int newCols) const;
+    Matrix Flatten() const { return Reshape(1, rows * cols); }
 
     // Debug
     std::string ToString() const;

@@ -1,5 +1,8 @@
 #include "matrix.hpp"
 
+#include <iomanip>
+#include <sstream>
+
 Matrix::Matrix(int r, int c)
 {
     this->rows = r;
@@ -181,12 +184,23 @@ Matrix Matrix::KroneckerMul(const Matrix& M) const
 
 bool Matrix::operator==(const Matrix& M) const
 {
-    
+    if(this->rows != M.rows || this->cols != M.cols) {
+        return false;
+    }
+
+    for(int r = 0; r < this->rows; r++) {
+        for(int c = 0; c < this->cols; c++) {
+            if(data[r][c] != M[r][c]) {
+                return false;
+            }
+        }
+    }
+    return true;
 }
 
 bool Matrix::operator!=(const Matrix& M) const
 {
-    
+    return !(*this == M);
 }
 
 Matrix Matrix::HorizonalConcat(const Matrix& M) const
@@ -206,7 +220,21 @@ Matrix Matrix::Reshape(int newRows, int newCols) const
 
 std::string Matrix::ToString() const
 {
+    std::stringstream stream;
+
+    stream << "------------- START of Matrix -------------" << std::endl;
+
+    for(int r = 0; r < this->rows; r++) {
+        for(int c = 0; c < this->cols; c++) {
+            stream << std::setprecision(2) << data[r][c];
+            printf("%10.2lf\t", data[r][c]);
+        }
+        stream << std::endl;
+    }
     
+    stream << "-------------  END of Matrix  -------------" << std::endl;
+
+    return stream.str();
 }
 
 Matrix Matrix::Identity(int size)

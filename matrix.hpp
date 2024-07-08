@@ -6,6 +6,8 @@
 
 class Matrix {
 
+// TODO: Proper error handling in many methods
+
 public:
     Matrix() {}
     Matrix(int r, int c);
@@ -14,12 +16,15 @@ public:
     // Properties
     int Rows() const { return rows; }
     int Columns() const { return cols; }
+    int Size() const { return data.size(); }
     bool isSquare() const { return rows == cols; }
     bool isSymmetric() const;
 
     // Access
-    std::vector<double>& operator[](int index) { return data[index]; }
-    const std::vector<double>& operator[](int index) const { return data[index]; }
+    double Get(int r, int c) const { return data[r * cols + c]; }
+
+    double& operator()(int r, int c) { return data[r * cols + c]; }
+    const double& operator()(int r, int c) const { return data[r * cols + c]; }
 
     // Operations
     Matrix operator+(const Matrix& M) const { return Add(M); }
@@ -42,8 +47,6 @@ public:
     double Determinant() const;
     double Trace() const;
 
-    Matrix ComponentwiseAdd(const Matrix& M) const;
-    Matrix ComponentwiseSub(const Matrix& M) const;
     Matrix ComponentwiseMul(const Matrix& M) const;
     Matrix ComponentwiseDiv(const Matrix& M) const;
 
@@ -56,6 +59,7 @@ public:
     // Manipulations
     Matrix HorizonalConcat(const Matrix& M) const;
     Matrix VerticalConcat(const Matrix& M) const;
+    Matrix Submatrix(int rowStart, int rowEnd, int colStart, int colEnd) const;
     Matrix Reshape(int newRows, int newCols) const;
     Matrix Flatten() const { return Reshape(1, rows * cols); }
 
@@ -66,8 +70,11 @@ public:
     static Matrix Identity(int size);
 
 protected:
+    // Internal Helpers Here
+
+protected:
     int rows;
     int cols;
     
-    std::vector<std::vector<double>> data;
+    std::vector<double> data;
 };

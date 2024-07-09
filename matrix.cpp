@@ -3,7 +3,7 @@
 #include <iomanip>
 #include <sstream>
 
-Matrix::Matrix(int r, int c)
+Matrix::Matrix(int r, int c = 1)
 {
     this->rows = r;
     this->cols = c;

@@ -10,7 +10,7 @@ class Matrix {
 
 public:
     Matrix() {}
-    Matrix(int r, int c);
+    Matrix(int r, int c = 1);
     Matrix(const Matrix& M);
 
     // Properties
@@ -68,9 +68,6 @@ public:
 
     // Static
     static Matrix Identity(int size);
-
-protected:
-    // Internal Helpers Here
 
 protected:
     int rows;

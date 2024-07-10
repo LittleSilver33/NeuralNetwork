@@ -10,12 +10,15 @@ public:
     Layer() {}
     Layer(int nodesIn, int nodesOut);
 
-    Matrix CalculateOutputs(const Matrix& inputs);
+    Matrix CalculateOutputs(const Matrix& inputs) const;
+    void ApplyGradients(double learningRate);
+    
+protected:
+    void RandomizeWeights();
 
 protected:
     int nodesIn, nodesOut;
-    Matrix weights;
-    Matrix biases;
-
+    Matrix weights, biases;
+    Matrix weightsCostGradient, biasesCostGradient;
     Activation activation;
 };

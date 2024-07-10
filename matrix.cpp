@@ -358,6 +358,17 @@ std::string Matrix::ToString() const
     return stream.str();
 }
 
+double Matrix::Sum() const
+{
+    double sum = 0.0;
+    for (int r = 0; r < this->rows; r++) {
+        for (int c = 0; c < this->cols; c++) {
+            sum += this->Get(r, c);
+        }
+    }
+    return sum;
+}
+
 Matrix Matrix::Identity(int size)
 {
     Matrix result(size, size);

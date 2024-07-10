@@ -9,7 +9,12 @@ NeuralNetwork::NeuralNetwork(std::vector<int> layerSizes)
     }
 }
 
-Matrix NeuralNetwork::CalculateOutputs(Matrix inputs)
+void NeuralNetwork::Learn(/* Insert Training Data Here */ double learningRate)
+{
+    // TODO: Implement
+}
+
+Matrix NeuralNetwork::CalculateOutputs(Matrix inputs) const
 {
     for (Layer layer : layers) {
         inputs = layer.CalculateOutputs(inputs);
@@ -17,7 +22,7 @@ Matrix NeuralNetwork::CalculateOutputs(Matrix inputs)
     return inputs;
 }
 
-int NeuralNetwork::Classify(Matrix inputs)
+int NeuralNetwork::Classify(Matrix inputs) const
 {
     Matrix outputs = CalculateOutputs(inputs);
 

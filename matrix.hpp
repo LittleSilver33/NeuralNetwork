@@ -66,6 +66,9 @@ public:
     // Debug
     std::string ToString() const;
 
+    // Misc
+    double Sum() const;
+
     // Static
     static Matrix Identity(int size);
 

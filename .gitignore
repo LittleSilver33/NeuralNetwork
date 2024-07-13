@@ -34,3 +34,12 @@
 *.exe
 *.out
 *.app
+
+# Build folder
+build/
+
+# CMake build file
+CMakeLists.txt
+
+# MacOS Things
+.DS_Store

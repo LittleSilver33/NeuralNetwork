@@ -1,8 +1,8 @@
 
 #pragma once
 
-#include "layer.hpp"
-#include "lossfunction.hpp"
+#include "layer.h"
+#include "lossfunction.h"
 
 class NeuralNetwork {
 

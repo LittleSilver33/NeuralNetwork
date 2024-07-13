@@ -1,8 +1,8 @@
 
 #pragma once
 
-#include "matrix.hpp"
-#include "activation.hpp"
+#include "matrix.h"
+#include "activation.h"
 
 class Layer {
 

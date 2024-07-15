@@ -1,5 +1,37 @@
 syntax = "proto3";
 
-message Message {
-    string text = 1;
+package neuralnetwork;
+
+message NeuralNetwork {
+    message Layer {
+        message Matrix {
+            int32 rows = 1;
+            int32 cols = 2;
+            repeated double data = 3;
+        }
+        enum Activation {
+            RELU = 0;
+            SIGMOID = 1;
+            TANH = 2;
+            // Add other activation functions as needed
+        }
+        int32 nodesIn = 1;
+        int32 nodesOut = 2;
+        Matrix weights = 3;
+        Matrix biases = 4;
+        Matrix weightsCostGradient = 5;
+        Matrix biasesCostGradient = 6;
+        Activation activation = 7;
+    }
+    message LossFunction {
+        enum LossFunctionType {
+            MEAN_SQUARED_ERROR = 0;
+            CROSS_ENTROPY = 1;
+            // Add other loss functions as needed
+        }
+        LossFunctionType type = 1;
+    }
+    repeated Layer layers = 1;
+    repeated int32 layerSizes = 2;
+    LossFunction lossFunction = 3;
 }

@@ -2,6 +2,7 @@
 
 #include "layer.h"
 #include "lossfunction.h"
+#include "absl/status/Status.h"
 
 class NeuralNetwork {
 
@@ -12,6 +13,8 @@ public:
 
     Matrix CalculateOutputs(Matrix inputs) const;
     int Classify(Matrix inputs) const;
+
+    Status SaveNetwork(std::string &file_path);
 
 protected:
     std::vector<Layer> layers;

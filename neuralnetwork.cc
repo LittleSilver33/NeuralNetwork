@@ -1,5 +1,6 @@
-
 #include "neuralnetwork.h"
+#include "build/feedforward.pb.h"
+#include "absl/status/Status.h"
 
 NeuralNetwork::NeuralNetwork(std::vector<int> layerSizes)
 {
@@ -37,20 +38,45 @@ int NeuralNetwork::Classify(Matrix inputs) const
     return maxIndex;
 }
 
-void NeuralNetwork::SaveNetwork(std::string file_path) const
+Status NeuralNetwork::SaveNetwork(const std::string &file_path)
 {
-    std::ofstream file(file_path);
-    if(!file.is_open())
-    {
-        std::cerr << "Error opening file " << file_path;
+    std::ifstream inputFile(file_path, std::ios::binary);
+    if (!inputFile) {
+        return absl::Status(absl::StatusCode::kInvalidArgument, "Failed to open the file at path: " + file_path);
     }
-    // Number of layers
-    file << layerSizes.size(); << "\n";
-    for(size_t i = 0; i < layers.size(); i++) {
-        file << layerSizes[i] << " ";
-    }
-    std::vector<Layer> layers;
-    std::vector<int> layerSizes;
 
-    LossFunction lossFunction;
+    std::string serializedData((std::istreambuf_iterator<char>(inputFile)), std::istreambuf_iterator<char>());
+
+    NeuralNetwork nnProto;
+    if (!nnProto.ParseFromString(serializedData)) {
+        return absl::Status(absl::StatusCode::kInvalidArgument, "Failed to parse proto file");
+    }
+
+    layers.clear();
+    layerSizes.clear();
+
+    for (const auto& layerProto : nnProto.layers()) {
+        Layer layer;
+        layer.nodesIn = layerProto.nodesin();
+        layer.nodesOut = layerProto.nodesout();
+
+        layer.weights = { layerProto.weights().rows(), layerProto.weights().cols(),
+                        { layerProto.weights().data().begin(), layerProto.weights().data().end() } };
+        
+        layer.biases = { layerProto.biases().rows(), layerProto.biases().cols(),
+                        { layerProto.biases().data().begin(), layerProto.biases().data().end() } };
+
+        layer.weightCostGradient = { layerProto.weightscostgradient().rows(), layersProto.weightscostgradient.cols(),
+                                    { layerProto.weightscostgradient().data().begin(), layerProto.weightscostgradient().data().end() } };
+
+        layer.activation = layerProto.activation();
+
+        layers.push_back(layer);
+    }
+
+    layerSizes.assign(nnProto.layersizes().begin(), nnProto.layersizes().end());
+
+    lossFunction.type = nnProto.lossfunction().type();
+
+    return absl::Status(absl::StatusCode::kOk, "Model loaded successfully");
 }

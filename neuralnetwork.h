@@ -14,7 +14,8 @@ public:
     Matrix CalculateOutputs(Matrix inputs) const;
     int Classify(Matrix inputs) const;
 
-    Status SaveNetwork(std::string &file_path);
+    absl::Status ReadNetwork(std::string &file_path);
+    absl::Status SaveNetwork(std::string &file_path) const;
 
 protected:
     std::vector<Layer> layers;

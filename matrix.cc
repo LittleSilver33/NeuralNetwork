@@ -3,8 +3,12 @@
 #include <iomanip>
 #include <sstream>
 
-Matrix::Matrix(int r, int c)
-{
+Matrix::Matrix() {
+    rows = 0;
+    cols = 0;
+}
+
+Matrix::Matrix(int r, int c) {
     this->rows = r;
     this->cols = c;
     data.reserve(r*c);
@@ -15,15 +19,13 @@ Matrix::Matrix(int r, int c)
     }
 }
 
-Matrix::Matrix(const Matrix& M)
-{
+Matrix::Matrix(const Matrix& M) {
     this->rows = M.rows;
     this->cols = M.cols;
     this->data = M.data;
 }
 
-bool Matrix::isSymmetric() const
-{
+bool Matrix::isSymmetric() const {
     if (!isSquare()) {
         return false;
     }
@@ -31,8 +33,7 @@ bool Matrix::isSymmetric() const
     return *this == Transpose();
 }
 
-Matrix Matrix::Add(const Matrix& M) const
-{
+Matrix Matrix::Add(const Matrix& M) const {
     if (M.rows != this->rows || M.cols != this->cols) {
         // Cannot Add, mismatched dimensions
         return Matrix();
@@ -49,13 +50,11 @@ Matrix Matrix::Add(const Matrix& M) const
     return result;
 }
 
-Matrix Matrix::Sub(const Matrix& M) const
-{
+Matrix Matrix::Sub(const Matrix& M) const {
     return *this + (M * -1.0);
 }
 
-Matrix Matrix::Mul(const Matrix& M) const
-{
+Matrix Matrix::Mul(const Matrix& M) const {
     Matrix result(this->rows, M.cols);
     
     for (int r = 0; r < this->rows; r++) {
@@ -70,8 +69,7 @@ Matrix Matrix::Mul(const Matrix& M) const
     return result;
 }
 
-std::vector<double> Matrix::Mul(const std::vector<double>& vec) const
-{
+std::vector<double> Matrix::Mul(const std::vector<double>& vec) const {
     if (vec.size() != this->cols) {
         // Cannot Multiply, mismatched dimensions
         return std::vector<double>();
@@ -91,8 +89,7 @@ std::vector<double> Matrix::Mul(const std::vector<double>& vec) const
     return result;
 }
 
-Matrix Matrix::ScalarMul(double scalar) const
-{
+Matrix Matrix::ScalarMul(double scalar) const {
     Matrix result(this->rows, this->cols);
 
     for (int r = 0; r < this->rows; r++) {
@@ -104,13 +101,11 @@ Matrix Matrix::ScalarMul(double scalar) const
     return result;
 }
 
-Matrix Matrix::ScalarDiv(double scalar) const
-{
+Matrix Matrix::ScalarDiv(double scalar) const {
     return ScalarMul(1.0 / scalar);
 }
 
-Matrix Matrix::Transpose() const
-{
+Matrix Matrix::Transpose() const {
     Matrix result(this->cols, this->rows);
 
     for (int r = 0; r < this->rows; r++) {
@@ -122,8 +117,7 @@ Matrix Matrix::Transpose() const
     return result;
 }
 
-Matrix Matrix::Inverse() const
-{
+Matrix Matrix::Inverse() const {
     double det = Determinant();
     if (!isSquare() || det == 0.0) {
         // Matrix is not invertible
@@ -154,8 +148,7 @@ Matrix Matrix::Inverse() const
     return result;
 }
 
-double Matrix::Determinant() const
-{
+double Matrix::Determinant() const {
     if (!isSquare()) {
         // Cannot get determinant of matrix that is not square
         return 0.0;
@@ -182,8 +175,7 @@ double Matrix::Determinant() const
     return det;
 }
 
-double Matrix::Trace() const
-{
+double Matrix::Trace() const {
     if (!isSquare()) {
         // Cannot get trace of matrix that is not square
         return 0.0;
@@ -196,8 +188,7 @@ double Matrix::Trace() const
     return sum;
 }
 // Hadamard Multiplication
-Matrix Matrix::ComponentwiseMul(const Matrix& M) const
-{
+Matrix Matrix::ComponentwiseMul(const Matrix& M) const {
     if (M.rows != this->rows || M.cols != this->cols) {
         // Cannot Multiply Component-wise, mismatched dimensions
         return Matrix();
@@ -214,8 +205,7 @@ Matrix Matrix::ComponentwiseMul(const Matrix& M) const
     return result;
 }
 
-Matrix Matrix::ComponentwiseDiv(const Matrix& M) const
-{
+Matrix Matrix::ComponentwiseDiv(const Matrix& M) const {
     if (M.rows != this->rows || M.cols != this->cols) {
         // Cannot Multiply Component-wise, mismatched dimensions
         return Matrix();
@@ -232,8 +222,7 @@ Matrix Matrix::ComponentwiseDiv(const Matrix& M) const
     return result;
 }
 
-Matrix Matrix::KroneckerMul(const Matrix& M) const
-{
+Matrix Matrix::KroneckerMul(const Matrix& M) const {
     Matrix result(rows * M.rows, cols * M.cols);
 
     for (int i = 0; i < rows; ++i) {
@@ -249,8 +238,7 @@ Matrix Matrix::KroneckerMul(const Matrix& M) const
     return result;
 }
 
-bool Matrix::operator==(const Matrix& M) const
-{
+bool Matrix::operator==(const Matrix& M) const {
     if (this->rows != M.rows || this->cols != M.cols) {
         return false;
     }
@@ -265,13 +253,11 @@ bool Matrix::operator==(const Matrix& M) const
     return true;
 }
 
-bool Matrix::operator!=(const Matrix& M) const
-{
+bool Matrix::operator!=(const Matrix& M) const {
     return !(*this == M);
 }
 
-Matrix Matrix::HorizonalConcat(const Matrix& M) const
-{
+Matrix Matrix::HorizonalConcat(const Matrix& M) const {
     if (this->rows != M.Rows()) {
         // Number of rows must be same
         return Matrix();
@@ -290,8 +276,7 @@ Matrix Matrix::HorizonalConcat(const Matrix& M) const
     return result;
 }
 
-Matrix Matrix::VerticalConcat(const Matrix& M) const
-{
+Matrix Matrix::VerticalConcat(const Matrix& M) const {
     if (this->cols != M.Columns()) {
         // Number of columns must be same
         return Matrix();
@@ -312,8 +297,7 @@ Matrix Matrix::VerticalConcat(const Matrix& M) const
     return result;
 }
 
-Matrix Matrix::Submatrix(int rowStart, int rowEnd, int colStart, int colEnd) const
-{
+Matrix Matrix::Submatrix(int rowStart, int rowEnd, int colStart, int colEnd) const {
     if (rowEnd < rowStart || colEnd < colStart) {
         // Invalid parameters provided
         return Matrix();
@@ -328,8 +312,7 @@ Matrix Matrix::Submatrix(int rowStart, int rowEnd, int colStart, int colEnd) con
     return result;
 }
 
-Matrix Matrix::Reshape(int newRows, int newCols) const
-{
+Matrix Matrix::Reshape(int newRows, int newCols) const {
     if (newRows * newCols != this->rows * this->cols) {
         // Cannot reshape, incompatible dimensions
         return Matrix();
@@ -340,8 +323,7 @@ Matrix Matrix::Reshape(int newRows, int newCols) const
     return result;
 }
 
-std::string Matrix::ToString() const
-{
+std::string Matrix::ToString() const {
     std::stringstream stream;
 
     stream << "------------- START of Matrix -------------" << std::endl;
@@ -358,8 +340,7 @@ std::string Matrix::ToString() const
     return stream.str();
 }
 
-double Matrix::Sum() const
-{
+double Matrix::Sum() const {
     double sum = 0.0;
     for (int r = 0; r < this->rows; r++) {
         for (int c = 0; c < this->cols; c++) {
@@ -369,8 +350,7 @@ double Matrix::Sum() const
     return sum;
 }
 
-Matrix Matrix::Identity(int size)
-{
+Matrix Matrix::Identity(int size) {
     Matrix result(size, size);
     
     for (int i = 0; i < size; i++) {

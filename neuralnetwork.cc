@@ -1,6 +1,6 @@
 #include "neuralnetwork.h"
 #include "build/feedforward.pb.h"
-#include "absl/status/Status.h"
+#include "absl/status/status.h"
 
 NeuralNetwork::NeuralNetwork(std::vector<int> layerSizes) {
     layers = std::vector<Layer>(layerSizes.size() - 1);

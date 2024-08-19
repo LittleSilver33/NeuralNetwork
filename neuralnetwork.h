@@ -2,7 +2,7 @@
 
 #include "layer.h"
 #include "lossfunction.h"
-#include "absl/status/Status.h"
+#include "absl/status/status.h"
 
 class NeuralNetwork {
 

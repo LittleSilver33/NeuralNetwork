@@ -9,7 +9,7 @@ class Matrix {
 // TODO: Proper error handling in many methods
 
 public:
-    Matrix() {}
+    Matrix();
     Matrix(int r, int c = 1);
     Matrix(const Matrix& M);
 

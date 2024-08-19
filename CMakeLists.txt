@@ -20,37 +20,14 @@ include_directories(${Protobuf_INCLUDE_DIRS})
 set(PROTO_FILES ${CMAKE_SOURCE_DIR}/proto/feedforward.proto)
 protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ${PROTO_FILES})
 
-# Add the Abseil directory
-list(APPEND CMAKE_PREFIX_PATH "/opt/homebrew/opt/abseil")
+# Find Abseil package using pkg-config
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(ABSL REQUIRED absl_status absl_strings absl_base absl_synchronization absl_log absl_check absl_raw_logging_internal absl_time)
 
-# Find Abseil package
-find_package(absl REQUIRED COMPONENTS base synchronization log check raw_logging_internal time status strings strings_internal)
-
-# Add the Abseil include directories
-include_directories(${absl_INCLUDE_DIRS})
-
-# Add the Matrix test executable
-add_executable(MatrixTest test/MatrixTest.cc Matrix.cc Matrix.h ${PROTO_SRCS} ${PROTO_HDRS})
-
-# Link Protobuf, Abseil, and GoogleTest libraries
-target_link_libraries(MatrixTest ${Protobuf_LIBRARIES}
-                                  absl::base
-                                  absl::synchronization
-                                  absl::log
-                                  absl::check
-                                  absl::raw_logging_internal
-                                  absl::time
-                                  absl::status
-                                  absl::strings
-                                  absl::strings_internal
-                                  gtest
-                                  gtest_main)
-
-# Include directories for generated protobuf files and Matrix header
-target_include_directories(MatrixTest PRIVATE ${CMAKE_SOURCE_DIR})
-
-# Enable Testing
-enable_testing()
+# Add Abseil include directories
+include_directories(${ABSL_INCLUDE_DIRS})
+include_directories(/usr/local/include)
+link_directories(${ABSL_LIBRARY_DIRS})
 
 # Fetch GoogleTest
 include(FetchContent)
@@ -61,5 +38,28 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
+# Add the test executables
+add_executable(MatrixTest test/MatrixTest.cc Matrix.cc Matrix.h ${PROTO_SRCS} ${PROTO_HDRS})
+add_executable(NeuralNetworkTest test/NeuralNetworkTest.cc NeuralNetwork.cc NeuralNetwork.h ${PROTO_SRCS} ${PROTO_HDRS})
+
+# Link Protobuf, Abseil, and GoogleTest libraries
+target_link_libraries(MatrixTest ${Protobuf_LIBRARIES}
+                                  ${ABSL_LIBRARIES}
+                                  gtest
+                                  gtest_main)
+
+target_link_libraries(NeuralNetworkTest ${Protobuf_LIBRARIES}
+                                         ${ABSL_LIBRARIES}
+                                         gtest
+                                         gtest_main)
+
+# Include directories for generated protobuf files and Matrix header
+target_include_directories(MatrixTest PRIVATE ${CMAKE_SOURCE_DIR})
+target_include_directories(NeuralNetworkTest PRIVATE ${CMAKE_SOURCE_DIR})
+
+# Enable Testing
+enable_testing()
+
 # Add your tests to CTest
 add_test(NAME MatrixTest COMMAND MatrixTest)
+add_test(NAME NeuralNetworkTest COMMAND NeuralNetworkTest)
